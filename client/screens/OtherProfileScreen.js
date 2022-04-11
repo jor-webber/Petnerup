@@ -16,7 +16,7 @@ import Post from '../components/Post';
 import { fetchUser, fetchAllPosts } from '../redux/actions/index';
 import SearchBar from '../components/SearchBar';
 import { Ionicons } from '@expo/vector-icons';
-import { collection, setDoc, getDocs, doc, deleteDoc } from 'firebase/firestore';
+import { collection, setDoc, getDocs, doc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, firestore } from '../firebase/config';
 import uuid from 'react-uuid';
 
@@ -50,19 +50,24 @@ const OtherProfileScreen = (props) => {
 
   const onFollowButtonPress = async () => {
     if (following) {
+      const followingCollection = collection(firestore, 'following');
+      const followingDocs = await getDocs(followingCollection);
+      const followingDoc = followingDocs.docs.find((doc) => doc.data().userId === auth.currentUser.uid && doc.data().followingId === userId);
+      await deleteDoc(doc(followingCollection, followingDoc.id));
       setFollowing(false);
       setFollowersCount(followersCount - 1);
     } else {
+      const following = {
+        id: uuid(),
+        userId: props.currentUser.id,
+        followingId: userId,
+        createdAt: serverTimestamp(),
+      };
+      await setDoc(doc(firestore, 'following', following.id), following);
       setFollowing(true);
       setFollowersCount(followersCount + 1);
     }
   }
-
-  const renderSectionSmall = () => {
-    return dataPosts.map((post, index) => {
-      console.log(post.image);
-    });
-  };
 
   const renderSection = () => {
     if (activeIndex === 0) {
@@ -118,10 +123,29 @@ const OtherProfileScreen = (props) => {
     }
   };
 
-  useEffect(() => {
+  useEffect((async () => {
     const posts = props.posts.filter((post) => post.userId === userId);
+    const followersDocs = await getDocs(collection(firestore, 'following'));
+    console.log(followersDocs);
+    let followersCount = 0;
+    let followingCount = 0;
+    followersDocs.docs.forEach((doc) => {
+      console.log(doc.data());
+      if (doc.data().followingId === userId) {
+        followersCount++;
+      }
+      if(doc.data().userId === auth.currentUser.uid && doc.data().followingId === userId) {
+        setFollowing(true);
+      }
+      if(doc.data().userId === userId) {
+        followingCount++;
+      }
+    });
+    console.log(followersCount);
+    setFollowersCount(followersCount);
+    setFollowingCount(followingCount);
     setUserPosts(posts);
-  }, []);
+  }), []);
   return (
     <View style={styles.container}>
       <SearchBar navigation={props.navigation} showSearchBar={false} />

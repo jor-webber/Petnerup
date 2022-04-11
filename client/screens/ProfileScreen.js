@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	StyleSheet,
 	View,
 	Text,
 	Image,
 	TouchableOpacity,
-	Dimensions,
+
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import Colors from "../constants/colors";
@@ -14,12 +14,11 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import Post from "../components/Post";
 import { fetchUser, fetchAllPosts } from "../redux/actions/index";
-import { auth } from "../firebase/config";
 import SearchBar from "../components/SearchBar";
 import { Ionicons } from "@expo/vector-icons";
+import { collection, setDoc, getDocs, doc, deleteDoc, serverTimestamp } from 'firebase/firestore';
+import { auth, firestore } from '../firebase/config';
 
-const width = Dimensions.get("window").width;
-const height = Dimensions.get("window").height;
 
 const mapDispatchToProps = (dispatch) => {
 	return bindActionCreators({ fetchUser, fetchAllPosts }, dispatch);
@@ -37,18 +36,30 @@ const mapStateToProps = (state) => {
 const ProfileScreen = (props) => {
 	const dataPosts = Array.from(props.posts);
 	const [activeIndex, setActiveIndex] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
+  const [followersCount, setFollowersCount] = useState(0);
 
 	const segmentClicked = (index) => {
 		setActiveIndex(index);
 		console.log(index);
 	};
 
-	const renderSectionSmall = () => {
-		return dataPosts.map((post, index) => {
-			console.log(post.image);
-		});
-	};
-
+  useEffect((async () => {
+    const followersDocs = await getDocs(collection(firestore, 'following'));
+    let followersCount = 0;
+    let followingCount = 0;
+    followersDocs.docs.forEach((doc) => {
+      console.log(doc.data());
+      if (doc.data().followingId === auth.currentUser.uid) {
+        followersCount++;
+      }
+      if(doc.data().userId === auth.currentUser.uid) {
+        followingCount++;
+      }
+    });
+    setFollowersCount(followersCount);
+    setFollowingCount(followingCount);
+  }), []);
 	const renderSection = () => {
 		if (activeIndex === 0) {
 			return (
@@ -130,8 +141,8 @@ const ProfileScreen = (props) => {
 						/>
 						<View>
 							<View style={styles.informationSection}>
-								<ProfileCount type="Following" count={0} />
-								<ProfileCount type="Followers" count={0} />
+								<ProfileCount type="Following" count={followingCount} />
+								<ProfileCount type="Followers" count={followersCount} />
 								<ProfileCount type="Family" count={0} />
 								<ProfileCount type="Pets" count={0} />
 							</View>
