@@ -12,7 +12,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { fetchUser, fetchAllPosts } from "../redux/actions/index";
 import { auth, firestore } from "../firebase/config";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc, getDocs, collection } from "firebase/firestore";
 import colors from "../constants/colors";
 const mapDispatchToProps = (dispatch) => {
 	return bindActionCreators({ fetchUser, fetchAllPosts }, dispatch);
@@ -35,10 +35,18 @@ const EditProfileScreen = (props) => {
 	const [lastName, setLastName] = useState(userLastName);
 
 	const onSubmit = async () => {
-		console.log(firstName);
 		const docRef = doc(firestore, "users", auth.currentUser.uid);
 		await updateDoc(docRef, { firstName: firstName, lastName: lastName });
+    const postDocs = await getDocs(collection(firestore, 'posts'));
+    postDocs.docs.forEach((document) => {
+      if (document.data().userId === auth.currentUser.uid) {
+        let docuRef = doc(firestore, 'posts', document.id);
+        updateDoc(docuRef, { firstName: firstName, lastName: lastName });
+      }
+    });
 		props.fetchUser();
+    props.fetchAllPosts();
+    props.navigation.navigate('Profile');
 	};
 
 	return (
