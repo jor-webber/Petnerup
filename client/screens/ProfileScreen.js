@@ -279,6 +279,20 @@ const styles = StyleSheet.create({
 		marginLeft: 10,
 		marginRight: 10,
 	},
+  editProfileButton: {
+    backgroundColor: 'green',
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 10,
+    marginBottom: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  editProfileText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen);

@@ -81,7 +81,7 @@ const SearchBar = ({ navigation, showSearchBar, users }) => {
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: "3%",
+        marginTop: "1%",
         width: '100%',
         height: 60,
         borderStyle: 'solid',
