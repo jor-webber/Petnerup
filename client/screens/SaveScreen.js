@@ -5,6 +5,13 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { setDoc, doc, serverTimestamp } from 'firebase/firestore';
 import uuid from 'react-uuid';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { fetchAllPosts } from '../redux/actions/index';
+
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({ fetchAllPosts }, dispatch);
+}
 
 const mapStateToProps = (state) => {
   return {
@@ -33,6 +40,7 @@ const Save = (props) => {
       createdAt: serverTimestamp(),
     };
     await setDoc(doc(firestore, 'posts', post.id), post);
+    props.fetchAllPosts();
     props.navigation.navigate('Home');
   };
 
@@ -100,4 +108,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default connect(mapStateToProps, null)(Save);
+export default connect(mapStateToProps, mapDispatchToProps)(Save);

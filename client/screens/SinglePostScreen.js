@@ -21,8 +21,15 @@ import {
 } from 'firebase/firestore';
 import uuid from 'react-uuid';
 import { firestore, auth } from '../firebase/config';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { fetchAllPosts } from '../redux/actions/index';
 
-const SinglePostScreen = ({ navigation, route }) => {
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({ fetchAllPosts }, dispatch);
+};
+
+const SinglePostScreen = ({ navigation, route, fetchAllPosts }) => {
   const { post } = route.params;
   const [comments, setComments] = useState([]);
   const [liked, setLiked] = useState(false);
@@ -56,6 +63,7 @@ const SinglePostScreen = ({ navigation, route }) => {
 
   const deletePost = async () => {
     await deleteDoc(doc(firestore, 'posts', post.id));
+    fetchAllPosts();
     navigation.goBack();
   };
 
@@ -221,4 +229,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SinglePostScreen;
+export default connect(null, mapDispatchToProps)(SinglePostScreen);
