@@ -20,7 +20,6 @@ const mapStateToProps = (state) => {
 
 const AddCommentScreen = (props) => {
   const [comment, setComment] = useState('');
-  const [comments, setComments] = useState([]);
 
   const handleCommentSubmit = () => {
     const { post } = props.route.params;
@@ -81,10 +80,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   button: {
+    alignSelf: 'center',
     backgroundColor: 'green',
     padding: 10,
     marginTop: 10,
-    width: '60',
+    width: 100,
     borderRadius: 5,
   },
   buttonText: {

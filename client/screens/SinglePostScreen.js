@@ -123,25 +123,27 @@ const SinglePostScreen = ({ navigation, route }) => {
           ) : null}
         </View>
       </View>
-      <View>
+      <View style={{ flex: 1 }}>
         <ScrollView
           ontentInsetAdjustmentBehavior='automatic'
           scrollEnabled={true}
-          style={{ height: 375 }}
+          style={{ flex: 1 }}
         >
           {comments.map((comment) => (
-            <View key={comment.id} style={styles.commentContainer}>
-              <Text style={styles.commentUsername}>
-                {comment.firstName} {comment.lastName}
-              </Text>
-              <Text style={styles.commentCreatedTime}>
-                {new Date(comment.createdAt.seconds * 1000).toDateString()}{' '}
-                {new Date(
-                  comment.createdAt.seconds * 1000
-                ).toLocaleTimeString()}
-              </Text>
-              <Text style={styles.commentContent}>{comment.content}</Text>
-            </View>
+            <TouchableOpacity  key={comment.id} onPress={() => navigation.navigate('Other Profile', { userId: comment.userId, firstName: comment.firstName, lastName: comment.lastName})}>
+              <View style={styles.commentContainer}>
+                <Text style={styles.commentUsername}>
+                  {comment.firstName} {comment.lastName}
+                </Text>
+                <Text style={styles.commentCreatedTime}>
+                  {new Date(comment.createdAt.seconds * 1000).toDateString()}{' '}
+                  {new Date(
+                    comment.createdAt.seconds * 1000
+                  ).toLocaleTimeString()}
+                </Text>
+                <Text style={styles.commentContent}>{comment.content}</Text>
+              </View>
+            </TouchableOpacity>
           ))}
         </ScrollView>
       </View>
