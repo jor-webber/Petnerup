@@ -127,7 +127,7 @@ const AddPetScreen = ({ navigation }) => {
           <SafeAreaView style={styles.textBoxContainer}>
             <Image
               style={styles.image}
-              source={require('../assets/favicon.png')}
+              source={require('../assets/logo.png')}
             />
           </SafeAreaView>
   
@@ -476,8 +476,8 @@ const AddPetScreen = ({ navigation }) => {
       flex: 1,
     },
     image: {
-      width: 100,
-      height: 100,
+      width: 120,
+      height: 150,
     },
     register: {
       fontSize: 24,

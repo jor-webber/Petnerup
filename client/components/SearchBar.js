@@ -45,7 +45,7 @@ const SearchBar = ({ navigation, showSearchBar, users }) => {
     return (
         <View style={styles.container}>
             <View style={styles.logo}>
-                <Image source={require("../assets/favicon.png")} style={styles.image} />
+                <Image source={require("../assets/logo.png")} style={styles.image} />
             </View>
             <View style={styles.textBoxContainer}>
               {showSearchBar && (

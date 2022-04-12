@@ -93,7 +93,7 @@ const RegisterPage = ({ navigation }) => {
         <SafeAreaView style={styles.textBoxContainer}>
           <Image
             style={styles.image}
-            source={require('../assets/favicon.png')}
+            source={require('../assets/logo.png')}
           />
         </SafeAreaView>
 
@@ -182,8 +182,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   image: {
-    width: 100,
-    height: 100,
+    width: 110,
+    height: 150,
   },
   register: {
     fontSize: 24,

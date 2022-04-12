@@ -32,7 +32,7 @@ const LoginScreen = ({ navigation }) => {
 				<SafeAreaView style={styles.textBoxContainer}>
 					<Image
 						style={styles.image}
-						source={require("../assets/favicon.png")}
+						source={require("../assets/logo.png")}
 					/>
 				</SafeAreaView>
 
